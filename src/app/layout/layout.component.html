@@ -1,0 +1,14 @@
+<div *ngIf="!(auth.isLoading$ | async); else loading">
+  <app-header></app-header>
+  <div class="container">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+<!-- Loading Screen -->
+<ng-template #loading>
+  <div class="d-flex align-items-center justify-content-center vw-100 vh-100">
+    <h1 class="mx-5">Loading...</h1>
+    <div class="spinner-border" role="status"></div>
+  </div>
+</ng-template>

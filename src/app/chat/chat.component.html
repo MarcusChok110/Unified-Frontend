@@ -1,1 +1,28 @@
-<p>chat works!</p>
+<div class="card mt-5">
+  <h5 class="card-header">Unified Chat Room</h5>
+  <div class="card-body">
+    <div class="overflow-auto">
+      <div class="row" *ngFor="let message of messages">
+        <div class="col-auto">
+          {{ message.content }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <form (ngSubmit)="onSubmit()">
+    <div class="input-group mt-3">
+      <input
+        type="text"
+        class="form-control"
+        name="content"
+        required
+        [(ngModel)]="messageInput"
+        placeholder="Send Message"
+        maxlength="255"
+      />
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+
+<button (click)="loadMockMessages()">Load Mock Messages</button>

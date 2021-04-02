@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { LayoutModule } from './layout/layout.module';
 import { HomeModule } from './home/home.module';
 import { ProfileModule } from './profile/profile.module';
+import { ChatModule } from './chat/chat.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,6 +34,7 @@ import { ProfileModule } from './profile/profile.module';
     LayoutModule,
     HomeModule,
     ProfileModule,
+    ChatModule,
   ],
   providers: [
     {

@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">{{ title }}</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li *ngFor="let route of routes" class="nav-item">
+          <a
+            [routerLink]="route.url"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link"
+            >{{ route.display }}
+          </a>
+        </li>
+      </ul>
+      <div class="navbar-nav ml-auto">
+        <button
+          class="btn btn-primary btn-block"
+          *ngIf="(auth.isAuthenticated$ | async) === false"
+          (click)="login()"
+        >
+          Log In
+        </button>
+        <!-- Not using else in if directive because log out would load regardless
+         of whether the authenticated state is resolved -->
+        <button
+          class="btn btn-danger btn-block"
+          *ngIf="auth.isAuthenticated$ | async"
+          (click)="logout()"
+        >
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

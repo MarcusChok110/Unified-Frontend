@@ -1,0 +1,22 @@
+<div
+  class="card"
+  [ngClass]="{
+    'text-white bg-primary text-end': message.authorId === userId,
+    'border-secondary': message.authorId !== userId
+  }"
+>
+  <div class="card-header">
+    <span class="h5">
+      {{ message.author }}
+    </span>
+    <span *ngIf="message.timestamp" style="font-size: 0.9em">
+      {{ message.timestamp.toDateString() }},
+      {{ message.timestamp.toLocaleTimeString() }}
+    </span>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      {{ message.content }}
+    </p>
+  </div>
+</div>

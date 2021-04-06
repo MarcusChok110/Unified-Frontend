@@ -13,7 +13,6 @@ import { myRxStompConfig } from './my-rx-stomp.config';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
-import { SharedModule } from './shared/shared.module';
 import { LayoutModule } from './layout/layout.module';
 import { HomeModule } from './home/home.module';
 import { ProfileModule } from './profile/profile.module';
@@ -30,7 +29,6 @@ import { ChatModule } from './chat/chat.module';
         allowedList: [environment.serverUrl],
       },
     }),
-    SharedModule,
     LayoutModule,
     HomeModule,
     ProfileModule,

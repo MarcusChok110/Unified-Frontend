@@ -1,5 +1,6 @@
-<div *ngIf="auth.user$ | async as user">
-  <div class="row align-items-center profile-header">
+<div *ngIf="profileService.profile as user">
+  <!-- Profile Picture + Full Name and Email -->
+  <div class="row align-items-center profile-header mt-2">
     <div class="col-md-2 mb-3">
       <img
         [src]="user.picture"
@@ -11,10 +12,31 @@
       <h2>{{ user.name }}</h2>
       <p class="lead text-muted">{{ user.email }}</p>
     </div>
-    <div class="row" *ngIf="profileJson">
-      <pre class="col-12 text-light bg-dark p-4">
-        {{ profileJson }}
+  </div>
+  <!-- Toggle Button -->
+  <button class="btn btn-primary my-3" (click)="toggleView()">
+    Toggle View Between JSON and List
+  </button>
+  <!-- JSON View -->
+  <div *ngIf="showJSON; else showList">
+    <div class="row" *ngIf="profileService.profileJson as profileJson">
+      <pre class="col-12 text-light bg-dark p-4"
+        >{{ profileJson }}
       </pre>
     </div>
   </div>
+  <!-- List Group of Fields View -->
+  <ng-template #showList>
+    <ol class="list-group">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-start"
+        *ngFor="let item of user | keyvalue"
+      >
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">{{ item.key }}</div>
+          {{ item.value }}
+        </div>
+      </li>
+    </ol>
+  </ng-template>
 </div>

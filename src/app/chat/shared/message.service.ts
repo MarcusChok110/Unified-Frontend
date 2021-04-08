@@ -37,4 +37,10 @@ export class MessageService {
   public addMessages(messages: Message[]): void {
     this.messages = [...this.messages, ...messages];
   }
+
+  public deleteMessage(id: number): void {
+    this.messages = this.messages.filter((message) => {
+      return message.id !== id;
+    });
+  }
 }

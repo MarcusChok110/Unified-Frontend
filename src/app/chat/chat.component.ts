@@ -1,40 +1,91 @@
-import { Component, OnInit } from '@angular/core';
-import { Message, mockMessages } from './shared/message.model';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Message } from './shared/message.model';
+import { MessageService } from './shared/message.service';
+import { ProfileService } from '../profile/shared/profile.service';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit {
-  public messages: Message[] = [];
+export class ChatComponent implements OnInit, OnDestroy {
   public messageInput = '';
 
-  constructor(private http: HttpClient) {}
+  @ViewChild('messageContainer')
+  private messageContainer?: ElementRef<HTMLDivElement>;
+  private socketSubscription?: Subscription;
 
-  private fetchMessages(): void {
-    this.http.get<Message[]>(environment.serverUrl).subscribe(
-      (messages) => {
-        this.messages = messages;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+  constructor(
+    public messageService: MessageService,
+    public profileService: ProfileService,
+    private rxStompService: RxStompService
+  ) {}
 
   public onSubmit(): void {
-    console.log(this.messageInput);
+    // if string is empty, do nothing
+    if (!this.messageInput) {
+      return;
+    }
+
+    const { sub, nickname } = this.profileService.profile;
+    const body = JSON.stringify(new Message(sub, nickname, this.messageInput));
+
+    this.rxStompService.publish({
+      destination: '/app/add',
+      body,
+    });
+
+    // reset the field
     this.messageInput = '';
   }
 
-  public loadMockMessages(): void {
-    this.messages = mockMessages;
+  public onDelete(id: number): void {
+    this.rxStompService.publish({
+      destination: '/app/delete',
+      body: String(id),
+    });
+  }
+
+  public scrollToBottom(smooth: boolean): void {
+    setTimeout(() => {
+      if (this.messageContainer) {
+        this.messageContainer.nativeElement.scroll({
+          top: this.messageContainer.nativeElement.scrollHeight,
+          behavior: smooth ? 'smooth' : 'auto',
+        });
+      }
+    }, 100);
   }
 
   ngOnInit(): void {
-    this.fetchMessages();
+    // set up socket handler
+    this.socketSubscription = this.rxStompService
+      .watch('/topic/responses')
+      .subscribe((message) => {
+        const response = JSON.parse(message.body);
+
+        // delete mapping
+        if (typeof response === 'number') {
+          return this.messageService.deleteMessage(response);
+        }
+
+        this.messageService.addMessage(response);
+        this.scrollToBottom(true);
+      });
+
+    // scroll to bottom of chat history
+    this.scrollToBottom(false);
+  }
+
+  ngOnDestroy(): void {
+    this.socketSubscription?.unsubscribe();
   }
 }

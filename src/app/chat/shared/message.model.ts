@@ -1,14 +1,14 @@
 export class Message {
   id?: number;
-  date?: Date;
+  timestamp?: Date;
 
   constructor(
     public authorId: string,
     public author: string,
     public content: string,
-    date?: Date
+    timestamp?: Date
   ) {
-    this.date = date;
+    this.timestamp = timestamp;
   }
 }
 

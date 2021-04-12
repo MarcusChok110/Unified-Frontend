@@ -13,6 +13,9 @@
       {{ message.timestamp.toDateString() }},
       {{ message.timestamp.toLocaleTimeString() }}
     </span>
+    <span class="btn-group" *ngIf="message.authorId === userId">
+      <button class="btn btn-danger btn-sm" (click)="onDelete()">Delete</button>
+    </span>
   </div>
   <div class="card-body">
     <p class="card-text">

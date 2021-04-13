@@ -1,11 +1,13 @@
 <div class="card mt-5">
   <h5 class="card-header">Unified Chat Room</h5>
   <div class="card-body">
-    <div class="overflow-auto">
-      <div class="row" *ngFor="let message of messages">
-        <div class="col-auto">
-          {{ message.content }}
-        </div>
+    <div #messageContainer class="overflow-auto message-container">
+      <div class="mb-3" *ngFor="let message of this.messageService.messages">
+        <app-message-card
+          [message]="message"
+          [userId]="profileService.profile.sub"
+          (deleteEvent)="onDelete($event)"
+        ></app-message-card>
       </div>
     </div>
   </div>
@@ -19,10 +21,9 @@
         [(ngModel)]="messageInput"
         placeholder="Send Message"
         maxlength="255"
+        autocomplete="off"
       />
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </form>
 </div>
-
-<button (click)="loadMockMessages()">Load Mock Messages</button>
